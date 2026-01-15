@@ -1,0 +1,30 @@
+# Build
+bin/
+*.o
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data (too large)
+corpus/
+corpus_raw.txt
+corpus_clean.txt
+data/
+
+# Dev files
+*.log
+test_*.py
+compare_*.py
+debug_*.py
+*_name.py
+conversation*.py
+ask_arianna.py
+reexport_weights.py
+samples/
+
+# Editor
+.vscode/
+*.swp
+.DS_Store
