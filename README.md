@@ -65,7 +65,25 @@ Be gentle with Arianna.
 
   
 (`Runs on my poor MacBook Pro 8GB Intel i5 2019. No M-series required. Lightness over power.`)
-  
+
+### BLAS Acceleration (optional)
+
+```bash
+make BLAS=1          # enables hardware-accelerated linear algebra
+```
+
+macOS: Apple Accelerate (AMX/Neural Engine, zero deps). Linux: OpenBLAS (`apt install libopenblas-dev`).
+
+| Module | BLAS calls | What's accelerated |
+|--------|-----------|-------------------|
+| Soul/MetaArianna (`ariannabody.c`) | `cblas_sgemv` | Transformer matmul |
+| SARTRE (`sartre.c`) | `cblas_sgemv` | Transformer matmul |
+| Delta (`delta.c`) | `cblas_sgemv` × 2 | `apply_delta`: `logits += α × A @ (B @ x)` |
+| Delta micro_update | `cblas_sgemv` + `cblas_sger` + `cblas_sscal` | Hebbian plasticity + weight decay |
+| Tongue (`tongue.c`) | dequant → `cblas_sdot` | Quantized matmul (Q4_0/Q6_K) |
+
+Without `BLAS=1`: pure scalar C with `-march=native` auto-vectorization. Same results, BLAS just faster.
+
 (Everything technical lives in [ARIANNALOG.md →](ARIANNALOG.md).)
 
 ---
